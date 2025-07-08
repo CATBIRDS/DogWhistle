@@ -40,7 +40,7 @@ for breed_name, breed in pairs(Breeds) do
                 add(elites, breed_name, default_value)
             elseif breed.tags.special or breed.tags.ritualist then
                 add(specials, breed_name, default_value)
-            elseif breed.tags.monster or breed.tags.captain then
+            elseif breed.tags.monster or breed.tags.captain or breed.tags.cultist_captain then
                 add(monsters, breed_name, default_value)
             end
         end

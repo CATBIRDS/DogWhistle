@@ -257,7 +257,7 @@ mod.toggle_all = function()
     local enabled, total = 0, 0
     -- Tally how many are enabled to determine whether this toggle should be enabling or disabling
     for breed_name, _ in pairs(Breeds) do
-        if Breeds[breed_name].tags.elite or Breeds[breed_name].tags.special or Breeds[breed_name].tags.ritualist or Breeds[breed_name].tags.monster or Breeds[breed_name].tags.captain then
+        if Breeds[breed_name].tags.elite or Breeds[breed_name].tags.special or Breeds[breed_name].tags.ritualist or Breeds[breed_name].tags.monster or Breeds[breed_name].tags.captain or Breeds[breed_name].tags.cultist_captain then
             if mod:get(breed_name) then
                 enabled = enabled + 1
             end
@@ -268,7 +268,7 @@ mod.toggle_all = function()
     local toggle_state = (enabled / total) * 100 <= 50 and true or false
     -- Toggle
     for breed_name, _ in pairs(Breeds) do
-        if Breeds[breed_name].tags.elite or Breeds[breed_name].tags.special or Breeds[breed_name].tags.ritualist or Breeds[breed_name].tags.monster or Breeds[breed_name].tags.captain then
+        if Breeds[breed_name].tags.elite or Breeds[breed_name].tags.special or Breeds[breed_name].tags.ritualist or Breeds[breed_name].tags.monster or Breeds[breed_name].tags.captain or Breeds[breed_name].tags.cultist_captain then
             mod:set(breed_name, toggle_state, true)
         end
     end
@@ -283,10 +283,11 @@ mod.toggle_group = function(group_setting)
         toggle_monsters = "monster",
     }
     local map_alt = {toggle_specials = "ritualist", toggle_monsters = "captain"} -- Alternate tags for enemies which do not exactly match a group but should be included in them
+    local map_admonition = { toggle_monsters = "cultist_captain" }
     -- Tally how many are enabled to determine whether this toggle should be enabling or disabling the group
     local enabled, total = 0, 0
     for breed_name, _ in pairs(Breeds) do
-        if Breeds[breed_name].tags[map[group_setting]] or Breeds[breed_name].tags[map_alt[group_setting]] then
+        if Breeds[breed_name].tags[map[group_setting]] or Breeds[breed_name].tags[map_alt[group_setting]] or Breeds[breed_name].tags[map_admonition[group_setting]] then
             if mod:get(breed_name) then
                 enabled = enabled + 1
             end
@@ -297,7 +298,7 @@ mod.toggle_group = function(group_setting)
     local toggle_state = (enabled / total) * 100 <= 50 and true or false
     -- Toggle
     for breed_name, _ in pairs(Breeds) do
-        if Breeds[breed_name].tags[map[group_setting]] or Breeds[breed_name].tags[map_alt[group_setting]] then
+        if Breeds[breed_name].tags[map[group_setting]] or Breeds[breed_name].tags[map_alt[group_setting]] or Breeds[breed_name].tags[map_admonition[group_setting]] then
             mod:set(breed_name, toggle_state, true)
         end
     end
@@ -588,7 +589,7 @@ mod.ignore_tag = function(unit, breed)
                 if tag_unit and tag_unit == unit then
                     -- Arbites with dog active: skip non-boss enemies
                     if marker == "unit_threat_adamant" then
-                        local not_big = breed and breed.tags and not (breed.tags.monster or breed.tags.captain or breed.tags.ogryn)
+                        local not_big = breed and breed.tags and not (breed.tags.monster or breed.tags.captain or breed.tags.cultist_captain or breed.tags.ogryn)
                         local not_mutant = breed and breed.name and type(breed.name) == "string" and string.find(breed.name, "mutant") == nil
                         if not_big and not_mutant then
                             ignore = true
